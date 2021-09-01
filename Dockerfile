@@ -12,8 +12,10 @@ ARG PGP_VERSION=master
 # Set up mandatory Go environmental variables.
 ENV CGO_ENABLED=0
 
+# RUN apk update \
+#     && apk add --no-cache --purge git upx dep
 RUN apk update \
-    && apk add --no-cache --purge git upx dep
+    && apk add --no-cache --purge git dep
 
 # Use go modules to download application code and dependencies
 
@@ -72,8 +74,8 @@ RUN go get github.com/go-openapi/spec && \
 RUN mkdir -p /out/protos && \
     find ${GOPATH}/src -name "*.proto" -exec cp --parents {} /out/protos \;
 
-RUN upx --lzma \
-        /out/usr/bin/protoc-gen-*
+# RUN upx --lzma \
+#         /out/usr/bin/protoc-gen-*
 
 FROM alpine:3.14.0
 RUN apk add --no-cache libstdc++ protobuf-dev
